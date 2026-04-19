@@ -35,23 +35,17 @@ def recv_msg(conn):
     return data.decode().strip()
 
 
-def handle_client(conn, addr):
-    print(f"Cliente conectado: {addr}")
-    while True:
-        msg = recv_msg(conn)
-        if msg is None:
-            break
+def handle_request(conn, msg):
+    start_time = time.time()
+    print(f"Processando: {msg}")
 
-        start_time = time.time()
-        print(f"Recebido de {addr}: {msg}")
-        response = process_request(msg)
-        processing_time = time.time() - start_time
+    response = process_request(msg)
 
-        full_response = f"{response} | tempo servidor: {processing_time:.6f}s\n"
-        conn.send(full_response.encode())
+    processing_time = time.time() - start_time
+    full_response = f"{response} | tempo servidor: {processing_time:.6f}s\n"
 
+    conn.send(full_response.encode())
     conn.close()
-    print(f"Conexão encerrada: {addr}")
 
 
 server = socket(AF_INET, SOCK_STREAM)
@@ -63,6 +57,13 @@ print("Servidor multithread aguardando conexões...")
 
 while True:
     conn, addr = server.accept()
-    thread = threading.Thread(target=handle_client, args=(conn, addr))
-    thread.daemon = True
-    thread.start()
+    print(f"Conexão de: {addr}")
+
+    msg = recv_msg(conn)
+
+    if msg:
+        thread = threading.Thread(target=handle_request, args=(conn, msg))
+        thread.daemon = True
+        thread.start()
+    else:
+        conn.close()
