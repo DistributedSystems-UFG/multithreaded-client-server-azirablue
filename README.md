@@ -10,10 +10,10 @@ Extensão do sistema cliente-servidor com suporte a multithreading no cliente e 
 
 A comunicação ocorre via protocolo TCP. A aplicação é composta pelos seguintes arquivos:
 
-- **`server.py`**: servidor single-thread, mantém uma conexão persistente e processa requisições sequencialmente.
-- **`server_multithread.py`**: servidor multithread, dispara uma nova thread para cada conexão recebida.
-- **`client_singlethread_auto.py`**: cliente single-thread com geração automática de requisições, usa conexão persistente.
-- **`client_multithread.py`**: cliente multithread, dispara uma nova thread por requisição, cada uma com sua própria conexão TCP.
+- **`server.py`**: servidor single-thread, aceita múltiplas conexões sequencialmente, processando uma requisição por vez.
+- **`server_multithread.py`**: servidor multithread, cuja thread principal aceita a conexão e recebe a requisição, disparando uma nova thread apenas para executá-la e responder ao cliente.
+- **`client_singlethread_auto.py`**: cliente single-thread com geração automática de requisições, abre uma conexão por requisição de forma sequencial.
+- **`client_multithread.py`**: cliente multithread, dispara uma nova thread por requisição, cada uma abrindo sua própria conexão TCP, enviando a requisição e aguardando a resposta.
 - **`constCS.py`**: define o endereço IP e a porta de comunicação.
 
 ---
@@ -85,6 +85,3 @@ O sistema mede tempo em dois níveis:
 
 - **Servidor**: tempo de processamento de cada requisição
 - **Cliente**: tempo entre envio e recebimento de cada resposta, e tempo total do experimento
-
----
-
