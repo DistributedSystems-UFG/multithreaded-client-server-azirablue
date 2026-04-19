@@ -12,7 +12,6 @@ A comunicação ocorre via protocolo TCP. A aplicação é composta pelos seguin
 
 - **`server.py`**: servidor single-thread, mantém uma conexão persistente e processa requisições sequencialmente.
 - **`server_multithread.py`**: servidor multithread, dispara uma nova thread para cada conexão recebida.
-- **`client.py`**: cliente interativo original, permite entrada manual de comandos.
 - **`client_singlethread_auto.py`**: cliente single-thread com geração automática de requisições, usa conexão persistente.
 - **`client_multithread.py`**: cliente multithread, dispara uma nova thread por requisição, cada uma com sua própria conexão TCP.
 - **`constCS.py`**: define o endereço IP e a porta de comunicação.
@@ -64,12 +63,6 @@ python3 server.py
 python3 server_multithread.py
 ```
 
-### Cliente interativo (manual)
-
-```bash
-python3 client.py
-```
-
 ### Cliente single-thread automatizado
 
 ```bash
@@ -94,14 +87,4 @@ O sistema mede tempo em dois níveis:
 - **Cliente**: tempo entre envio e recebimento de cada resposta, e tempo total do experimento
 
 ---
-
-## Experimento Comparativo
-
-Os experimentos foram executados em duas instâncias EC2 da AWS separadas, comunicando-se via rede privada, com 500 requisições cada.
-
-| Experimento | Cliente | Servidor | Tempo Total |
-|---|---|---|---|
-| 1 | Single-thread | Single-thread | 0.161579s |
-| 2 | Single-thread | Multithread | 0.179163s |
-| 3 | Multithread | Multithread | 1.228349s |
 
