@@ -2,7 +2,6 @@ from socket import *
 from constCS import *
 import time
 
-
 def process_request(msg):
     parts = msg.split(" ", 1)
     command = parts[0].upper()
@@ -39,23 +38,20 @@ s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 s.bind((HOST, PORT))
 s.listen(1)
 
-print("Servidor single-thread aguardando conexão...")
-
-(conn, addr) = s.accept()
-print("Conectado por:", addr)
+print("Servidor single-thread aguardando conexões...")
 
 while True:
+    conn, addr = s.accept()
+    print("Conectado por:", addr)
+
     msg = recv_msg(conn)
-    if msg is None:
-        break
+    if msg:
+        start_time = time.time()
+        print("Recebido:", msg)
+        response = process_request(msg)
+        processing_time = time.time() - start_time
 
-    start_time = time.time()
-    print("Recebido:", msg)
-    response = process_request(msg)
-    processing_time = time.time() - start_time
+        full_response = f"{response} | tempo servidor: {processing_time:.6f}s\n"
+        conn.send(full_response.encode())
 
-    full_response = f"{response} | tempo servidor: {processing_time:.6f}s\n"
-    conn.send(full_response.encode())
-
-conn.close()
-print("Conexão encerrada.")
+    conn.close()
